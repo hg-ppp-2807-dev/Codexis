@@ -1,13 +1,8 @@
-import os
-from langchain_mistralai import ChatMistralAI
 from graph.state import GraphState
+from agents.llm_utils import get_llm
 
 def _get_llm():
-    return ChatMistralAI(
-        model="mistral-large-latest",
-        temperature=0.4,
-        mistral_api_key=os.getenv("MISTRAL_API_KEY")
-    )
+    return get_llm()
 
 def readme_generator(state: GraphState) -> GraphState:
     """Agent 6: Generates a high-quality Markdown README based on all previous analyses."""

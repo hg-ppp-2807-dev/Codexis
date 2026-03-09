@@ -8,16 +8,22 @@ import TechStackCard from '@/components/TechStackCard'
 import SkillsChart from '@/components/SkillsChart'
 import ArchSuggestions from '@/components/ArchSuggestions'
 import ReadmePreview from '@/components/ReadmePreview'
+import HealthScoreCard from '@/components/HealthScoreCard'
+import RefactorSuggestions from '@/components/RefactorSuggestions'
+import ArchitectureDiagram from '@/components/ArchitectureDiagram'
+import PRReviewCard from '@/components/PRReviewCard'
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [analysis, setAnalysis] = useState<any>(null)
+  const [features, setFeatures] = useState<any>({})
   const [error, setError] = useState('')
 
   const handleAnalyze = async (url: string) => {
     setIsLoading(true)
     setError('')
     setAnalysis(null)
+    setFeatures({})
 
     try {
       const res = await fetch('http://localhost:8080/api/analyze-repo', {
@@ -33,6 +39,51 @@ export default function Home() {
 
       const data = await res.json()
       setAnalysis(data)
+
+      // Extract owner/name from the URL that was analyzed
+      const urlParts = url.replace('https://github.com/', '').split('/')
+      const repoPayload = {
+        owner: urlParts[0] || 'unknown',
+        name: urlParts[1] || 'unknown',
+        languages: data.tech_stack?.categories?.flatMap((c: any) => 
+          c.technologies?.map((t: any) => ({ [t.name]: Math.round(t.confidence * 10000) })) || []
+        ).reduce((acc: any, item: any) => ({ ...acc, ...item }), {}) || {},
+        file_tree: ['src/']
+      }
+
+      // Fetch health score
+      fetch('http://localhost:8080/api/features/health-score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(repoPayload)
+      })
+        .then(r => r.json())
+        .then(r => r.data)
+        .then((healthScore: any) => setFeatures((prev: any) => ({ ...prev, healthScore })))
+        .catch(console.error)
+
+      // Fetch refactor suggestions
+      fetch('http://localhost:8080/api/features/refactor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(repoPayload)
+      })
+        .then(r => r.json())
+        .then(r => r.data)
+        .then((refactor: any) => setFeatures((prev: any) => ({ ...prev, refactor })))
+        .catch(console.error)
+
+      // Fetch architecture diagram
+      fetch('http://localhost:8080/api/features/architecture', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(repoPayload)
+      })
+        .then(r => r.json())
+        .then(r => r.data)
+        .then((architecture: any) => setFeatures((prev: any) => ({ ...prev, architecture })))
+        .catch(console.error)
+
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred')
     } finally {
@@ -105,9 +156,12 @@ export default function Home() {
                 <div className="space-y-6">
                   <TechStackCard data={analysis.tech_stack} />
                   <ArchSuggestions data={analysis.architecture} />
+                  <ArchitectureDiagram data={features.architecture || analysis.architecture} />
+                  <RefactorSuggestions data={features.refactor || {}} />
                 </div>
                 <div className="space-y-6">
                   <SkillsChart data={analysis.skills} />
+                  <HealthScoreCard data={features.healthScore || {}} />
 
                   {/* Code Quality Snippet */}
                   <div className="bg-gray-900 rounded-2xl p-6 border border-white/5 h-auto">

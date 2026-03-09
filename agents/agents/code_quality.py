@@ -1,14 +1,9 @@
-import os
 import json
-from langchain_mistralai import ChatMistralAI
 from graph.state import GraphState
+from agents.llm_utils import get_llm
 
 def _get_llm():
-    return ChatMistralAI(
-        model="mistral-large-latest",
-        temperature=0.3,
-        mistral_api_key=os.getenv("MISTRAL_API_KEY")
-    )
+    return get_llm()
 
 def code_quality(state: GraphState) -> GraphState:
     """Agent 3: Assesses code quality and security practices based on tree and deps."""

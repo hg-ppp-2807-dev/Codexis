@@ -1,13 +1,14 @@
 from langgraph.graph import StateGraph, END
 from graph.state import GraphState
 
-# Import agents
-from agents.agents.repo_analyzer import repo_analyzer
-from agents.agents.stack_detector import stack_detector
-from agents.agents.code_quality import code_quality
-from agents.agents.architecture import architecture
-from agents.agents.skill_extractor import skill_extractor
-from agents.agents.readme_generator import readme_generator
+# Import agents (relative imports from the agents package)
+from agents.repo_analyzer import repo_analyzer
+from agents.stack_detector import stack_detector
+from agents.code_quality import code_quality
+from agents.architecture import architecture
+from agents.architecture_diagram import architecture_diagram
+from agents.skill_extractor import skill_extractor
+from agents.readme_generator import readme_generator
 
 async def run_analysis_workflow(repo_data: dict) -> dict:
     """
@@ -21,6 +22,7 @@ async def run_analysis_workflow(repo_data: dict) -> dict:
     workflow.add_node("stack_detector", stack_detector)
     workflow.add_node("code_quality", code_quality)
     workflow.add_node("architecture", architecture)
+    workflow.add_node("architecture_diagram", architecture_diagram)
     workflow.add_node("skill_extractor", skill_extractor)
     workflow.add_node("readme_generator", readme_generator)
 
@@ -29,7 +31,8 @@ async def run_analysis_workflow(repo_data: dict) -> dict:
     workflow.add_edge("repo_analyzer", "stack_detector")
     workflow.add_edge("stack_detector", "code_quality")
     workflow.add_edge("code_quality", "architecture")
-    workflow.add_edge("architecture", "skill_extractor")
+    workflow.add_edge("architecture", "architecture_diagram")
+    workflow.add_edge("architecture_diagram", "skill_extractor")
     workflow.add_edge("skill_extractor", "readme_generator")
     workflow.add_edge("readme_generator", END)
 

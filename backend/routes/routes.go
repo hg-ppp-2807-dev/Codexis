@@ -10,4 +10,11 @@ func RegisterRoutes(r chi.Router) {
 		r.Post("/analyze-repo", controllers.AnalyzeRepoHandler)
 		r.Get("/analysis/{id}", controllers.GetAnalysisHandler)
 	})
+
+	// Feature routes
+	r.Post("/api/features/architecture", controllers.GenerateArchitecture)
+	r.Post("/api/features/health-score", controllers.GetHealthScore)
+	r.Post("/api/features/pr-review", controllers.ReviewPR)
+	r.Post("/api/features/skills", controllers.GetSkillGraph)
+	r.Post("/api/features/refactor", controllers.GetRefactorSuggestions)
 }
