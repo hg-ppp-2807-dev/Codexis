@@ -16,12 +16,12 @@ def stack_detector(state: GraphState) -> GraphState:
     llm = _get_llm()
 
     prompt = f"""
-    You are a senior software architect. Based on the file tree, dependencies, and identified languages,
+    You are a senior software architect. Based on the file tree, dependency files contents, and identified languages,
     detect the full technology stack of this repository.
 
-    Languages (Bytes): {json.dumps(repo_data.get('languages', {}))}
-    Relevant Dependency Files Discovered: {json.dumps(repo_data.get('dependencies', []))}
-    Top-Level File Tree: {json.dumps(repo_data.get('file_tree', [])[:100])}
+    Languages: {json.dumps(repo_data.get('languages', {}))}
+    Dependency Files (filename: content): {json.dumps(repo_data.get('dependencies', {}))}
+    File Tree: {json.dumps(repo_data.get('file_tree', []))}
 
     Output EXACTLY this JSON structure, and nothing else (no markdown blocks like ```json):
     {{

@@ -119,7 +119,11 @@ export default function Home() {
                       <div className="shrink-0 w-24 h-24 rounded-full border-8 border-gray-800 flex items-center justify-center relative">
                         {/* Circular Progress logic placeholder */}
                         <div className="absolute inset-0 rounded-full border-8 border-yellow-400" style={{ clipPath: `polygon(0 0, 100% 0, 100% ${(analysis.code_quality?.overall_score || 0)}%, 0 ${(analysis.code_quality?.overall_score || 0)}%)` }}></div>
-                        <span className="text-2xl font-bold z-10 relative">{analysis.code_quality?.overall_score || '?'}</span>
+                        <span className="text-2xl font-bold z-10 relative">
+                          {analysis.code_quality?.overall_score !== null && analysis.code_quality?.overall_score !== undefined
+                            ? `${analysis.code_quality.overall_score}/100`
+                            : '?'}
+                        </span>
                       </div>
                       <div>
                         <h4 className="font-semibold text-gray-200">Overall Score</h4>
@@ -131,7 +135,9 @@ export default function Home() {
               </div>
 
               {/* Generated README Full Width */}
-              <ReadmePreview content={analysis.generated_readme} />
+              {analysis.generated_readme && !analysis.has_existing_readme && (
+                <ReadmePreview content={analysis.generated_readme} />
+              )}
 
             </motion.div>
           )}

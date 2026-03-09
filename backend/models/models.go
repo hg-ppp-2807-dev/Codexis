@@ -17,15 +17,16 @@ type Repository struct {
 }
 
 type AnalysisReport struct {
-	ID              string          `json:"id"`
-	RepoID          string          `json:"repo_id"`
-	Summary         string          `json:"summary"`
-	TechStack       json.RawMessage `json:"tech_stack"`
-	CodeQuality     json.RawMessage `json:"code_quality"`
-	Architecture    json.RawMessage `json:"architecture"`
-	Skills          json.RawMessage `json:"skills"`
-	GeneratedReadme string          `json:"generated_readme"`
-	CreatedAt       time.Time       `json:"created_at"`
+	ID                string          `json:"id"`
+	RepoID            string          `json:"repo_id"`
+	Summary           string          `json:"summary"`
+	TechStack         json.RawMessage `json:"tech_stack"`
+	CodeQuality       json.RawMessage `json:"code_quality"`
+	Architecture      json.RawMessage `json:"architecture"`
+	Skills            json.RawMessage `json:"skills"`
+	GeneratedReadme   string          `json:"generated_readme"`
+	HasExistingReadme bool            `json:"has_existing_readme"`
+	CreatedAt         time.Time       `json:"created_at"`
 }
 
 // Request Models
@@ -35,12 +36,13 @@ type AnalyzeRequest struct {
 
 // Data Transfer Objects (DTO) passed to AI Agents
 type RepoDataDTO struct {
-	URL           string         `json:"url"`
-	Owner         string         `json:"owner"`
-	Name          string         `json:"name"`
-	Languages     map[string]int `json:"languages"`
-	FileTree      []string       `json:"file_tree"`
-	Dependencies  []string       `json:"dependencies"` // Scanned from go.mod, package.json, requirements.txt, etc
-	Readme        string         `json:"readme"`
-	RecentCommits []string       `json:"recent_commits"`
+	URL               string            `json:"url"`
+	Owner             string            `json:"owner"`
+	Name              string            `json:"name"`
+	Languages         map[string]int    `json:"languages"`
+	FileTree          []string          `json:"file_tree"`
+	Dependencies      map[string]string `json:"dependencies"` // Scanned file contents (package.json, go.mod, etc.)
+	Readme            string            `json:"readme"`
+	HasExistingReadme bool              `json:"has_existing_readme"`
+	RecentCommits     []string          `json:"recent_commits"`
 }

@@ -21,7 +21,7 @@ def repo_analyzer(state: GraphState) -> GraphState:
     
     Repository Name: {repo_data.get('owner')}/{repo_data.get('name')}
     Languages: {json.dumps(repo_data.get('languages', {}))}
-    Dependencies: {json.dumps(repo_data.get('dependencies', []))}
+    Dependency Files (filename: content): {json.dumps(repo_data.get('dependencies', {}))}
     
     README Extract:
     {repo_data.get('readme', '')[:3000]} # Truncated to avoid massive prompt for summary

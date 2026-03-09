@@ -19,8 +19,8 @@ def architecture(state: GraphState) -> GraphState:
     You are a Principal Architect. Review the repository metadata to determine the software architecture.
 
     Languages: {json.dumps(repo_data.get('languages', {}))}
-    Dependencies: {json.dumps(repo_data.get('dependencies', []))}
-    File Tree Snapshot: {json.dumps(repo_data.get('file_tree', [])[:300])}
+    Dependency Files (filename: content): {json.dumps(repo_data.get('dependencies', {}))}
+    File Tree Snapshot: {json.dumps(repo_data.get('file_tree', []))}
     Detected Stack: {json.dumps(state.get('tech_stack', {}))}
 
     Based on the folder names (e.g., 'controllers', 'services', 'ui', 'apps/', 'packages/'), 

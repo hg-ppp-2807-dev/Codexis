@@ -2,12 +2,12 @@ from langgraph.graph import StateGraph, END
 from graph.state import GraphState
 
 # Import agents
-from agents.repo_analyzer import repo_analyzer
-from agents.stack_detector import stack_detector
-from agents.code_quality import code_quality
-from agents.architecture import architecture
-from agents.skill_extractor import skill_extractor
-from agents.readme_generator import readme_generator
+from agents.agents.repo_analyzer import repo_analyzer
+from agents.agents.stack_detector import stack_detector
+from agents.agents.code_quality import code_quality
+from agents.agents.architecture import architecture
+from agents.agents.skill_extractor import skill_extractor
+from agents.agents.readme_generator import readme_generator
 
 async def run_analysis_workflow(repo_data: dict) -> dict:
     """
@@ -50,6 +50,9 @@ async def run_analysis_workflow(repo_data: dict) -> dict:
     result = await app.ainvoke(inputs)
 
     # Format the final output to match Go expected model
+    # Get has_existing_readme from repo_data
+    has_existing_readme = repo_data.get("has_existing_readme", False) if repo_data else False
+    
     return {
         "repo_id": "", # Added in Go
         "summary": result.get("summary", ""),
@@ -57,6 +60,7 @@ async def run_analysis_workflow(repo_data: dict) -> dict:
         "code_quality": result.get("code_quality", {}),
         "architecture": result.get("architecture", {}),
         "skills": result.get("skills", {}),
-        "generated_readme": result.get("generated_readme", "")
+        "generated_readme": result.get("generated_readme", ""),
+        "has_existing_readme": has_existing_readme
     }
 

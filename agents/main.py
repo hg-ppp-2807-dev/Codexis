@@ -16,8 +16,9 @@ class RepoDataDTO(BaseModel):
     name: str
     languages: Dict[str, int] = {}
     file_tree: List[str] = []
-    dependencies: List[str] = []
+    dependencies: Dict[str, str] = {}
     readme: str = ""
+    has_existing_readme: bool = False
     recent_commits: List[str] = []
 
 @app.post("/analyze")

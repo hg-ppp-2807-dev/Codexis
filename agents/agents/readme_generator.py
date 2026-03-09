@@ -12,6 +12,10 @@ def _get_llm():
 def readme_generator(state: GraphState) -> GraphState:
     """Agent 6: Generates a high-quality Markdown README based on all previous analyses."""
     repo_data = state.get("repo_data", {})
+    if repo_data.get("has_existing_readme"):
+        state["generated_readme"] = ""
+        return state
+
     tech_stack = state.get("tech_stack", {})
     architecture = state.get("architecture", {})
 

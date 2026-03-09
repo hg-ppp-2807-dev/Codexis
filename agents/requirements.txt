@@ -62,4 +62,4 @@ uvicorn==0.41.0
 websockets==16.0
 xxhash==3.6.0
 zstandard==0.25.0
-langchain-mistralai==0.2.7
+langchain-mistralai
